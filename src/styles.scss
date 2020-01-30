@@ -11,3 +11,47 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+// .marker {
+//   background-image: url("/assets/mapbox-icon.png");
+//   background-size: cover;
+//   width: 50px;
+//   height: 50px;
+//   border-radius: 50%;
+//   cursor: pointer;
+// }
+
+.mapboxgl-popup {
+  .mapboxgl-popup-tip {
+    border-bottom-color: #0187d4;
+  }
+
+  .mapboxgl-popup-content {
+    font: 400 15px/22px "Source Sans Pro", "Helvetica Neue", Sans-serif;
+    padding: 0;
+    width: 200px;
+
+    button.mapboxgl-popup-close-button {
+      display: none;
+    }
+
+    > div {
+      margin-top: 15px;
+
+      h3 {
+        background: #0187d4;
+        color: #fff;
+        margin: 0;
+        display: block;
+        padding: 10px;
+        border-radius: 3px 3px 0 0;
+        font-weight: 700;
+        margin-top: -15px;
+      }
+
+      div {
+        padding: 10px;
+      }
+    }
+  }
+}

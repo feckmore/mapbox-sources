@@ -3,6 +3,7 @@
   [zoom]="[11.15]"
   [center]="[-73.995813, 40.730105]"
   [cursorStyle]="cursorStyle"
+  (load)="mapLoaded($event)"
 >
   <mgl-geojson-source id="points" [data]="points"></mgl-geojson-source>
   <mgl-layer
@@ -10,7 +11,9 @@
     source="points"
     type="symbol"
     [layout]="{
-      'icon-image': '{icon}-15',
+      'icon-image': 'icon-{icon}',
+      'icon-size': 0.1,
+      'icon-anchor': 'bottom',
       'icon-allow-overlap': true
     }"
     (click)="onClick($event)"
@@ -19,9 +22,11 @@
   ></mgl-layer>
   <mgl-popup
     *ngIf="selectedPoint"
+    anchor="top"
     [lngLat]="selectedPoint.geometry.coordinates"
     (close)="selectedPoint = null"
   >
-    <span [innerHTML]="selectedPoint.properties.fullname"></span>
+    <h3>{{ selectedPoint.properties.fullname }}</h3>
+    <div>{{ selectedPoint.properties.address1 }}</div>
   </mgl-popup>
 </mgl-map>

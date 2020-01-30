@@ -104,7 +104,7 @@ export class LocationService {
         properties: {
           fullname: l.fullname,
           address1: l.address1,
-          icon: 'theatre'
+          icon: 'custom'
         },
         geometry: {
           type: 'Point',

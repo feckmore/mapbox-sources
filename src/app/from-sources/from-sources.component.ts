@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 
-import { MapMouseEvent } from 'mapbox-gl';
+import { Map, MapMouseEvent } from 'mapbox-gl';
 
 import { LocationService } from '../location.service';
 
@@ -13,15 +13,25 @@ export class FromSourcesComponent implements OnInit {
   points: GeoJSON.FeatureCollection<GeoJSON.Point>;
   selectedPoint: GeoJSON.Feature<GeoJSON.Point> | null;
   cursorStyle: string;
+  map: Map;
 
   constructor(
     private locationService: LocationService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
-    this.getGeoJson();
+    // this.getGeoJson();
   }
 
   ngOnInit() {}
+
+  mapLoaded(map: Map) {
+    this.map = map;
+    this.map.loadImage('/assets/map-marker.png', (e, image) => {
+      this.map.addImage('icon-custom', image);
+    });
+
+    this.getGeoJson();
+  }
 
   getGeoJson() {
     const result = this.locationService.getGeoJsonLocations();
