@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 
 import { Map, MapMouseEvent } from 'mapbox-gl';
 
-import { LocationService } from '../location.service';
+import { LocationService, MapLocation, Feature } from '../location.service';
 
 @Component({
   selector: 'app-from-sources',
@@ -10,6 +10,7 @@ import { LocationService } from '../location.service';
   styleUrls: ['./from-sources.component.scss']
 })
 export class FromSourcesComponent implements OnInit {
+  locations: MapLocation[];
   points: GeoJSON.FeatureCollection<GeoJSON.Point>;
   selectedPoint: GeoJSON.Feature<GeoJSON.Point> | null;
   cursorStyle: string;
@@ -34,20 +35,41 @@ export class FromSourcesComponent implements OnInit {
   }
 
   getGeoJson() {
-    const result = this.locationService.getGeoJsonLocations();
+    const result = this.locationService.getLocations();
     result.forEach(locations => {
       console.log('adding locations');
-      this.points = locations;
+      this.locations = locations;
+      this.points = this.locationService.toFeatureCollection(locations);
     });
   }
 
-  onClick(evt: MapMouseEvent) {
+  pointClick(evt: MapMouseEvent) {
     console.log('click');
     console.log(evt);
     this.selectedPoint = null;
     this.changeDetectorRef.detectChanges();
-    this.selectedPoint = (evt as any).features[0];
+    this.selectedPoint = (evt as any).features[0] as Feature;
     console.log('selected point');
     console.log(this.selectedPoint);
+  }
+
+  cardClick(location: MapLocation) {
+    console.log('card click - ' + location.id);
+    this.selectLocation(location);
+  }
+
+  selectLocation(location: MapLocation) {
+    console.log(location);
+    const feature = this.locationService.toFeature(location);
+    console.log(feature);
+    if (
+      !this.selectedPoint ||
+      this.selectedPoint.properties.id !== location.id
+    ) {
+      console.log('new point selected');
+      this.selectedPoint = this.locationService.toFeature(location);
+      console.log('selected point');
+      console.log(this.selectedPoint);
+    }
   }
 }

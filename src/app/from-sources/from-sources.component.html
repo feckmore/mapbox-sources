@@ -1,32 +1,75 @@
-<mgl-map
-  [style]="'mapbox://styles/mapbox/streets-v9'"
-  [zoom]="[11.15]"
-  [center]="[-73.995813, 40.730105]"
-  [cursorStyle]="cursorStyle"
-  (load)="mapLoaded($event)"
->
-  <mgl-geojson-source id="points" [data]="points"></mgl-geojson-source>
-  <mgl-layer
-    id="points"
-    source="points"
-    type="symbol"
-    [layout]="{
-      'icon-image': 'icon-{icon}',
-      'icon-size': 0.1,
-      'icon-anchor': 'bottom',
-      'icon-allow-overlap': true
-    }"
-    (click)="onClick($event)"
-    (mouseEnter)="cursorStyle = 'pointer'"
-    (mouseLeave)="cursorStyle = ''"
-  ></mgl-layer>
-  <mgl-popup
-    *ngIf="selectedPoint"
-    anchor="top"
-    [lngLat]="selectedPoint.geometry.coordinates"
-    (close)="selectedPoint = null"
-  >
-    <h3>{{ selectedPoint.properties.fullname }}</h3>
-    <div>{{ selectedPoint.properties.address1 }}</div>
-  </mgl-popup>
-</mgl-map>
+<div class="page-container">
+  <div class="map-container">
+    <mgl-map
+      [style]="'mapbox://styles/mapbox/streets-v9'"
+      [zoom]="[11.15]"
+      [center]="[-73.995813, 40.730105]"
+      [cursorStyle]="cursorStyle"
+      (load)="mapLoaded($event)"
+    >
+      <mgl-geojson-source id="points" [data]="points"></mgl-geojson-source>
+      <mgl-layer
+        id="points"
+        source="points"
+        type="symbol"
+        [layout]="{
+          'icon-image': 'icon-{icon}',
+          'icon-size': 0.1,
+          'icon-anchor': 'bottom',
+          'icon-allow-overlap': true
+        }"
+        (click)="pointClick($event)"
+        (mouseEnter)="cursorStyle = 'pointer'"
+        (mouseLeave)="cursorStyle = ''"
+      ></mgl-layer>
+      <mgl-popup
+        *ngIf="selectedPoint"
+        anchor="top"
+        [lngLat]="selectedPoint.geometry.coordinates"
+        (close)="selectedPoint = null"
+      >
+        <h3>{{ selectedPoint.properties.fullname }}</h3>
+        <div>
+          {{ selectedPoint.properties.line1 }}
+          <br />
+          {{ selectedPoint.properties.line2 }}
+        </div>
+      </mgl-popup>
+    </mgl-map>
+  </div>
+  <div class="search-container">
+    <div #searchbox class="geocoder"></div>
+    <div class="results">
+      <mat-card
+        *ngFor="let location of locations"
+        (click)="cardClick(location)"
+        [class.selected]="
+          selectedPoint && location.id == selectedPoint.properties.id
+        "
+      >
+        <mat-card-header>
+          <div mat-card-avatar>
+            <mat-icon>star</mat-icon>
+            <div>{{ location.classification }}</div>
+          </div>
+          <mat-card-title>{{ location.fullname }}</mat-card-title>
+          <mat-card-subtitle>
+            <div class="specialty mat-small">
+              {{ location.specialties.join(", ") | titlecase }}
+            </div>
+            <div class="organization">
+              {{ location.organization }} ({{
+                location.distance | number: "1.1-1"
+              }}
+              {{ location.units }})
+            </div>
+            <div>
+              {{ location.line1 }}
+            </div>
+            <div>{{ location.line2 }}</div>
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -2,3 +2,99 @@ mgl-map {
   height: 100%;
   width: 100%;
 }
+
+.page-container {
+  display: grid;
+  grid-template-areas: "searchArea mapArea";
+  grid-template-columns: auto 1fr;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+
+  .map-container {
+    grid-area: mapArea;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .search-container {
+    grid-area: searchArea;
+    min-width: 400px;
+
+    .geocoder {
+    }
+
+    .results {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      height: calc(100vh - 46px);
+      padding: 0 8px 4px 8px;
+
+      .mat-card {
+        margin-top: 8px;
+        max-width: 352px;
+        cursor: pointer;
+
+        &.selected {
+          color: red;
+        }
+
+        .mat-card-header {
+          .organization {
+            margin-top: 0;
+          }
+
+          .specialty {
+            margin-bottom: 5px;
+          }
+
+          .distance {
+          }
+
+          .mat-card-title {
+            margin-bottom: 6px;
+          }
+
+          .mat-card-avatar {
+            height: 100%;
+            display: grid;
+            align-self: center;
+            text-align: center;
+            margin-right: 12px;
+          }
+
+          .mat-icon {
+            height: 40px;
+            width: 100%;
+            font-size: 40px;
+            align-self: center;
+          }
+
+          .mat-card-subtitle {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-aspect-ratio: 8/8) {
+  .page-container {
+    grid-template-areas: "mapArea" "searchArea";
+    grid-template-columns: none;
+    grid-template-rows: 2fr 1fr;
+
+    .search-container {
+      .results {
+        height: 40vh;
+
+        .mat-card {
+          max-width: none;
+        }
+      }
+    }
+  }
+}

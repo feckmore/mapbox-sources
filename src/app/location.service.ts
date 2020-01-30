@@ -51,7 +51,8 @@ export interface Feature {
 }
 
 export interface Properties {
-  [key: string]: string;
+  id: string;
+  [key: string]: any;
 }
 
 export interface Geometry {
@@ -87,34 +88,44 @@ export class LocationService {
     return locations;
   }
 
-  getGeoJsonLocations(): Observable<FeatureCollection> {
+  getFeatureCollection(): Observable<FeatureCollection> {
     return this.http.get('/assets/locations.json').pipe(
       map((data: any) => {
         const transformed = this.transformResponse(data);
-        return this.toGeoJson(transformed);
+        return this.toFeatureCollection(transformed);
       })
     );
   }
 
-  toGeoJson(locations: MapLocation[]): FeatureCollection {
+  toFeatureCollection(locations: MapLocation[]): FeatureCollection {
     const features: Feature[] = [];
     for (const l of locations) {
-      const feature = {
-        type: 'Feature',
-        properties: {
-          fullname: l.fullname,
-          address1: l.address1,
-          icon: 'custom'
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: l.coordinates
-        }
-      };
-
+      const feature = this.toFeature(l);
       features.push(feature as Feature);
     }
 
     return { type: 'FeatureCollection', features } as FeatureCollection;
+  }
+
+  toFeature(l: MapLocation): Feature {
+    return {
+      type: 'Feature',
+      properties: {
+        id: l.id,
+        classification: l.classification,
+        specialties: l.specialties,
+        organization: l.organization,
+        distance: l.distance,
+        units: l.units,
+        fullname: l.fullname,
+        line1: l.line1,
+        line2: l.line2,
+        icon: 'custom'
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: l.coordinates
+      }
+    };
   }
 }
